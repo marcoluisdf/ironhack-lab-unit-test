@@ -126,9 +126,67 @@ public class DataProcessingTest {
 
 # Scenario 3: UI Responsiveness
 
+tmp
+``` java
+TEST UIResponsiveness
+  UI_COMPONENT uiComponent = setupUIComponent(1024)
+  ASSERT_TRUE(uiComponent.adjustsToScreenSize(1024), "UI should adjust to width of 1024 pixels")
+END TEST
+
+```
+
+## Issues
+- Nombre de la prueba poco descriptivo
+- No existe una limpiza de los datos para setupUIComponent
 
 
 
+## Solution
 
-multiples afirmaciones (registro en bd, envio de correo electronico)
-Falta de separacion de responsabilidades
+``` java
+
+public class UIResponsivenessTest {
+
+    private UI_COMPONENT uiComponent;
+
+    @BeforeEach
+    public void setUp() {
+        uiComponent = new UI_COMPONENT();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        uiComponent = null;
+    }
+
+    @Test
+    public void testUIAdjustsToWidth1024() {
+        uiComponent.setupUIComponent(1024);
+        assertTrue(uiComponent.adjustsToScreenSize(1024), "UI should adjust to a width of 1024 pixels");
+    }
+
+    @Test
+    public void testUIAdjustsToWidth800() {
+        uiComponent.setupUIComponent(800);
+        assertTrue(uiComponent.adjustsToScreenSize(800), "UI should adjust to a width of 800 pixels");
+    }
+
+    @Test
+    public void testUIAdjustsToWidth1280() {
+        uiComponent.setupUIComponent(1280);
+        assertTrue(uiComponent.adjustsToScreenSize(1280), "UI should adjust to a width of 1280 pixels");
+    }
+
+    @Test
+    public void testUIHeightConsistency() {
+        uiComponent.setupUIComponent(1024);
+        assertEquals(expectedHeight, uiComponent.getHeight(), "UI height should be consistent for width of 1024 pixels");
+    }
+
+}
+
+```
+- Se agregan nombres mas descriptivos
+- Se agrega control para la preparacion y limpieza de los datos
+- Se prueban multiples escenarios con distintos valores
+- Se agregan mensajes claros
